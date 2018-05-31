@@ -1,2 +1,8 @@
 #include <iostream>
-#include "../Nodes/Node.hpp"
+#include "Node.hpp"
+using namespace std;
+
+template <typename T>
+class List {
+
+};

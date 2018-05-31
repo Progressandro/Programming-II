@@ -11,7 +11,7 @@ private:
   Node<T>* _next = NULL;
   Node<T>* _prev = NULL;
 
-public:                                     //Inline declarations
+public:                                 //Inline declarations
   //Constructors
   Node();
   Node(const Node<T>& originalNode);
@@ -24,12 +24,11 @@ public:                                     //Inline declarations
   Node* getNext() const                     {return this->_next;}
   Node* getPrev() const                     {return this->_prev;}
   //Setters
-  void setData(T input)                     {this->data = input;}
+  void setData(T input)                    {this->data = input;}
   void setNext(Node* _newNext)              {this->_next = _newNext;}
   void setPrev(Node* _newPrev)              {this->_prev = _newPrev;}
   //Copy
   void copy(const Node<T>& originalNode);
-  //Assignment
   Node<T>& operator=(const Node<T>& originalNode);
 
 };
