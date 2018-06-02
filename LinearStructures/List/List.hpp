@@ -4,5 +4,124 @@ using namespace std;
 
 template <typename T>
 class List {
+private:
+  Node<T>* _header = NULL;
+  int lenght = 0;
 
+
+public:
+  //Constructors
+  List();
+  List(T element);
+  List(const List& originalList);
+  //Destructor
+  ~List();
+  //Watchers
+  int getLenght() const {return this->lenght;}
+  bool empty() const    {return this->_header==NULL;}
+  T getElement(int position) const;
+  int indexOf(T element) const;
+  bool find(T element) const;
+  void print() const;
+  //Modifiers
+  void insert(T element, int position);
+  void remove(T element);
+  void flush();
+  //Copy
+  void copy();
+  List& operator=(const List<T>& originalList);
 };
+
+template <typename T>
+List<T>::List() {
+
+}
+
+template <typename T>
+List<T>::List(T element) {
+  Node<T>* new__header = new Node<T>;
+  this->_header = new__header;
+}
+
+template <typename T>
+List<T>::List(const List& originalList) {
+
+}
+
+template <typename T>
+List<T>::~List() {
+  // this->flush();
+}
+
+template <typename T>
+T List<T>::getElement(int position) const {
+  if (position > 0 && position <= this->lenght) {
+
+    Node<T>* _current = this->_header;
+    Node<T>* _next = _current->getNext();
+
+    for (int i = 1; i < position; i++) {
+      _current = _next;
+      _next = _current->getNext();
+    }
+    return _current->getData();
+  }
+  else {
+    cout << "Error: Non-existend position requested." << endl;
+  }
+}
+
+template <typename T>
+int List<T>::indexOf(T element) const {
+
+}
+
+template <typename T>
+bool List<T>::find(T element) const {
+
+}
+
+template <typename T>
+void List<T>::print() const {
+  if (this->lenght > 0) {
+
+    Node<T>* _current = this->_header;
+    Node<T>* _next = _current->getNext();
+
+    for(int i = 1; i < this->lenght; i++) {
+      cout << _current->getData() << " ";
+      _current = _next;
+      _next = _current->getNext();
+    }
+    cout << _current->getData() << endl;
+  }
+}
+
+template <typename T>
+void List<T>::insert(T element, int position) {
+  if(position > 0 && position <= (this->lenght)+1) {
+
+    Node<T>* _new_node = new Node<T>;
+    _new_node->setData(element);
+
+    if (position > 1) {
+      Node<T>* _current = this->_header;
+      Node<T>* _next = _current->getNext();
+      for(int i = 1; i < position-1; i++) {
+        _current = _next;
+        _next = _current->getNext();
+      }
+      _current->setNext(_new_node);
+      _new_node->setNext(_next);
+    }
+    else {
+      Node<T>* _current_header = this->_header;
+      _new_node->setNext(_current_header);
+      this->_header = _new_node;
+    }
+    this->lenght++;
+  }
+  else {
+    cout << "Tried to insert in invalid position" << endl;
+  }
+}
