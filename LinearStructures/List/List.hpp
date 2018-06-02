@@ -16,6 +16,7 @@ public:
   List(const List& originalList);
   //Destructor
   ~List();
+  void flush();
   //Watchers
   int getLenght() const {return this->lenght;}
   bool empty() const    {return this->_header==NULL;}
@@ -26,7 +27,6 @@ public:
   //Modifiers
   void insert(T element, int position);
   void remove(T element);
-  void flush();
   //Copy
   void copy();
   List& operator=(const List<T>& originalList);
@@ -39,8 +39,8 @@ List<T>::List() {
 
 template <typename T>
 List<T>::List(T element) {
-  Node<T>* new__header = new Node<T>;
-  this->_header = new__header;
+  Node<T>* newHeader = new Node<T>;
+  this->_header = newHeader;
 }
 
 template <typename T>
@@ -50,7 +50,22 @@ List<T>::List(const List& originalList) {
 
 template <typename T>
 List<T>::~List() {
-  // this->flush();
+  this->flush();
+}
+
+template <typename T>
+void List<T>::flush() {
+  if(!this->empty()) {
+    Node<T>* _current = this->_header;
+    Node<T>* _saveNext;
+    while (_current != NULL) {
+      _saveNext = _current->getNext();
+      delete _current;
+      _current = _saveNext;
+    }
+    this->_header = NULL;
+    this->lenght = 0;
+  }
 }
 
 template <typename T>
@@ -101,8 +116,8 @@ template <typename T>
 void List<T>::insert(T element, int position) {
   if(position > 0 && position <= (this->lenght)+1) {
 
-    Node<T>* _new_node = new Node<T>;
-    _new_node->setData(element);
+    Node<T>* _newNode = new Node<T>;
+    _newNode->setData(element);
 
     if (position > 1) {
       Node<T>* _current = this->_header;
@@ -111,13 +126,13 @@ void List<T>::insert(T element, int position) {
         _current = _next;
         _next = _current->getNext();
       }
-      _current->setNext(_new_node);
-      _new_node->setNext(_next);
+      _current->setNext(_newNode);
+      _newNode->setNext(_next);
     }
     else {
-      Node<T>* _current_header = this->_header;
-      _new_node->setNext(_current_header);
-      this->_header = _new_node;
+      Node<T>* _currentHeader = this->_header;
+      _newNode->setNext(_currentHeader);
+      this->_header = _newNode;
     }
     this->lenght++;
   }

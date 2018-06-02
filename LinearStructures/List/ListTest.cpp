@@ -26,5 +26,10 @@ int main() {
   cout << a.getElement(1) << endl;
   cout << "Now all the elements: " << endl;
   a.print();
+  a.flush();
+  cout << "Lenght after flush: " << endl;
+  cout << a.getLenght() << endl;
+  cout << "Print after flush: " << endl;
+  a.print();
   return 0;
 }
