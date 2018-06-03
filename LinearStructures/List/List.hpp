@@ -22,14 +22,16 @@ public:
   bool empty() const    {return this->_header==NULL;}
   T getElement(int position) const;
   int indexOf(T element) const;
-  bool find(T element) const;
+  bool exists(T element) const;
   void print() const;
   //Modifiers
   void insert(T element, int position);
-  void remove(T element);
+  void removeElement(T element);
+  void removePosition(int position);
+  void reverse();
   //Copy
-  void copy();
-  List& operator=(const List<T>& originalList);
+  void copy(const List<T>& originalList);
+  List<T>& operator=(const List<T>& originalList);
 };
 
 template <typename T>
@@ -39,13 +41,15 @@ List<T>::List() {
 
 template <typename T>
 List<T>::List(T element) {
-  Node<T>* newHeader = new Node<T>;
-  this->_header = newHeader;
+  Node<T>* _newHeader = new Node<T>;
+  this->_header = _newHeader;
 }
 
 template <typename T>
 List<T>::List(const List& originalList) {
-
+  if(this->_header != originalList._header) {
+    this->copy(originalList);
+  }
 }
 
 template <typename T>
@@ -58,7 +62,7 @@ void List<T>::flush() {
   if(!this->empty()) {
     Node<T>* _current = this->_header;
     Node<T>* _saveNext;
-    while (_current != NULL) {
+    while (_current) {
       _saveNext = _current->getNext();
       delete _current;
       _current = _saveNext;
@@ -88,12 +92,37 @@ T List<T>::getElement(int position) const {
 
 template <typename T>
 int List<T>::indexOf(T element) const {
+  if(!this->empty()) {
+    Node<T>* _current = this->_header;
+    Node<T>* _next = _current->getNext();
 
+    int i = 1;
+    bool found = false;
+    while(i <= this->lenght && !found) {
+      if(_current->getData() == element) found = true;
+      _current = _next;
+      _next = _current->getNext();
+      i++;
+    }
+    if (found) return i-1;
+    else return -1;
+  }
 }
 
 template <typename T>
-bool List<T>::find(T element) const {
-
+bool List<T>::exists(T element) const {
+  if(!this->empty()) {
+    Node<T>* _current = this->_header;
+    Node<T>* _next = _current->getNext();
+    bool found = false;
+    while(_current) {
+      if(_current->getData() == element) found = true;
+      _current = _next;
+      _next = _current->getNext();
+    }
+    if(found) return true;
+    else return false;
+  }
 }
 
 template <typename T>
@@ -108,7 +137,7 @@ void List<T>::print() const {
       _current = _next;
       _next = _current->getNext();
     }
-    cout << _current->getData() << endl;
+    cout << _current->getData() << endl << endl;
   }
 }
 
@@ -138,5 +167,39 @@ void List<T>::insert(T element, int position) {
   }
   else {
     cout << "Tried to insert in invalid position" << endl;
+  }
+}
+
+template <typename T>
+void List<T>::reverse() {
+  if(!this->empty()) {
+    Node<T>* _current = this->_header;
+    Node<T>* _previous = NULL;
+    Node<T>* _next = NULL;
+
+    while(_current) {
+      _next = _current->getNext();
+      _current->setNext(_previous);
+      _previous = _current;
+      _current = _next;
+    }
+    this->_header = _previous;
+  }
+}
+
+template <typename T>
+void List<T>::copy(const List<T>& originalList) {
+  if(!originalList.empty()) {
+    for(int i = 1; i <= originalList.lenght; i++) {
+      this->insert(originalList.getElement(i), 1);
+    }
+    this->reverse();
+  }
+}
+
+template <typename T>
+List<T>& List<T>::operator=(const List<T>& originalList) {
+  if(!this->empty()) {
+    this->copy(originalList);
   }
 }
