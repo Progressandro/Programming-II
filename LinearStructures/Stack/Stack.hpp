@@ -6,7 +6,7 @@ template <typename T>
 class Stack {
 private:
   Node<T>* _top = NULL;
-  int lenght = 0;
+  int len = 0;
 public:
   //Cosntructors
   Stack();
@@ -14,7 +14,7 @@ public:
 
   //Copy
   void copy(const Stack<T>& originalStack);
-  Stack<T>& Stack(const Stack<T>& originalStack);
+  Stack(const Stack<T>& originalStack);
   Stack<T>& operator=(const Stack<T>& originalStack);
   
   //Destructor
@@ -23,14 +23,14 @@ public:
   
   //Watchers
   bool empty()  {return this->_top == NULL;}
-  int lenght()  {return this->lenght;}
+  int lenght()  {return this->len;}
   T peek()      {return this->_top->getData();}
   void print();
   
   //Modifiers
   void push(T element);
   void pop();
-}
+};
 
 template <typename T>
 Stack<T>::Stack() {
@@ -42,16 +42,12 @@ Stack<T>::Stack(T element) {
   Node<T>* _newTop = new Node<T>;
   _newTop->setData(element);
   this->_top = _newTop;
-  this->lenght++;
+  this->len++;
 }
 
 template <typename T>
-Stack<T>& Stack<T>::Stack() {
+Stack<T>::Stack(const Stack<T>& originalStack) {
   
-}
-
-Stack<T>& Stack<T>::Stack(const Stack<T>& originalStack) {
-
 }
 
 template <typename T>
@@ -68,7 +64,8 @@ void Stack<T>::flush() {
     _current = _current->getNext();
     delete _toDelete;
   }
-  this->lenght = 0;
+  this->_top = NULL;
+  this->len = 0;
 }
 
 template <typename T>
@@ -77,6 +74,7 @@ void Stack<T>::print() {
 
   while(_current) {
     cout << _current->getData() << " ";
+    _current = _current->getNext();
   }
   cout << endl;
 }
@@ -86,8 +84,8 @@ void Stack<T>::push(T element) {
   Node<T>* _newTop = new Node<T>;
   _newTop->setData(element);
   _newTop->setNext(this->_top);
-  this->_top = _newTop();
-  this->lenght++;
+  this->_top = _newTop;
+  this->len++;
 }
 
 template <typename T>
@@ -96,7 +94,7 @@ void Stack<T>::pop() {
     Node<T>* _toDelete = this->_top;
     this->_top = _toDelete->getNext();
     delete _toDelete;
-    lenght--;
+    len--;
   }
 }
 

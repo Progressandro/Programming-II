@@ -41,5 +41,6 @@ int main() {
   b.print();
   cout << "This should print a 3: " << endl;
   cout << b.indexOf(2) << endl;
+  b.flush();
   return 0;
 }

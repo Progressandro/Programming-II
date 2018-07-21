@@ -13,7 +13,7 @@ public:
   //Constructors
   List();
   List(T element);
-  List(const List& originalList);
+  List(const List<T>& originalList);
   //Destructor
   ~List();
   void flush();
