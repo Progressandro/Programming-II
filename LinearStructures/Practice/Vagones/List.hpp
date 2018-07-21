@@ -6,7 +6,7 @@ template <typename T>
 class List {
 private:
   Node<T>* _header = NULL;
-  int lenght = 0;
+  int len = 0;
 
 
 public:
@@ -18,7 +18,7 @@ public:
   ~List();
   void flush();
   //Watchers
-  int getLenght() const {return this->lenght;}
+  int lenght() const {return this->len;}
   bool empty() const    {return this->_header==NULL;}
   T getElement(int position) const;
   int indexOf(T element) const;
@@ -32,6 +32,8 @@ public:
   //Copy
   void copy(const List<T>& originalList);
   List<T>& operator=(const List<T>& originalList);
+  bool operator==(const List<T>& toCompare);
+  
 };
 
 template <typename T>
@@ -68,13 +70,13 @@ void List<T>::flush() {
       _current = _saveNext;
     }
     this->_header = NULL;
-    this->lenght = 0;
+    this->len = 0;
   }
 }
 
 template <typename T>
 T List<T>::getElement(int position) const {
-  if (position > 0 && position <= this->lenght) {
+  if (position > 0 && position <= this->len) {
 
     Node<T>* _current = this->_header;
     Node<T>* _next = _current->getNext();
@@ -98,7 +100,7 @@ int List<T>::indexOf(T element) const {
 
     int i = 1;
     bool found = false;
-    while(i <= this->lenght && !found) {
+    while(i <= this->len && !found) {
       if(_current->getData() == element) found = true;
       _current = _next;
       _next = _current->getNext();
@@ -127,12 +129,12 @@ bool List<T>::exists(T element) const {
 
 template <typename T>
 void List<T>::print() const {
-  if (this->lenght > 0) {
+  if (this->len > 0) {
 
     Node<T>* _current = this->_header;
     Node<T>* _next = _current->getNext();
 
-    for(int i = 1; i < this->lenght; i++) {
+    for(int i = 1; i < this->len; i++) {
       cout << _current->getData() << " ";
       _current = _next;
       _next = _current->getNext();
@@ -143,7 +145,7 @@ void List<T>::print() const {
 
 template <typename T>
 void List<T>::insert(T element, int position) {
-  if(position > 0 && position <= (this->lenght)+1) {
+  if(position > 0 && position <= (this->len)+1) {
 
     Node<T>* _newNode = new Node<T>;
     _newNode->setData(element);
@@ -163,13 +165,33 @@ void List<T>::insert(T element, int position) {
       _newNode->setNext(_currentHeader);
       this->_header = _newNode;
     }
-    this->lenght++;
+    this->len++;
   }
   else {
     cout << "Tried to insert in invalid position" << endl;
   }
 }
 
+template <typename T>
+void List<T>::removePosition(int position) {
+  if (!this->empty() && position >= 1 && position <= this->len) {
+    Node<T>* _current = this->_header;
+    if (position == 1) {
+      this->_header = _current->getNext();
+      delete _current;
+    }
+    else {
+      Node<T>* _previous = NULL;
+      for (int i = 1; i <= position-1; i++) {
+        _previous = _current;
+        _current = _current->getNext();
+      }
+      _previous->setNext(_current->getNext());
+      delete _current;
+    }
+    this->len--;
+  }
+}
 template <typename T>
 void List<T>::reverse() {
   if(!this->empty()) {
@@ -190,7 +212,7 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::copy(const List<T>& originalList) {
   if(!originalList.empty()) {
-    for(int i = 1; i <= originalList.lenght; i++) {
+    for(int i = 1; i <= originalList.len; i++) {
       this->insert(originalList.getElement(i), 1);
     }
     this->reverse();
@@ -199,7 +221,29 @@ void List<T>::copy(const List<T>& originalList) {
 
 template <typename T>
 List<T>& List<T>::operator=(const List<T>& originalList) {
-  if(!this->empty()) {
+  if(!originalList.empty() && this != &originalList) {
+    this->flush();
     this->copy(originalList);
   }
+  return (*this);
+}
+
+template <typename T>
+bool List<T>::operator==(const List<T>& toCompare) {
+  if(this == &toCompare)
+    return true;
+  if(this->len != toCompare.len)
+    return false;
+    cout << endl << "Hello" << endl;
+  
+  Node<T>* _currentThis = this->_header;
+  Node<T>* _currentCompare = toCompare._header;
+  
+  while(_currentThis) {
+    if(_currentThis->getData() != _currentCompare->getData())
+      return false;
+    _currentThis = _currentThis->getNext();
+    _currentCompare = _currentCompare->getNext();
+  }
+  return true;
 }
