@@ -234,7 +234,6 @@ bool List<T>::operator==(const List<T>& toCompare) {
     return true;
   if(this->len != toCompare.len)
     return false;
-    cout << endl << "Hello" << endl;
   
   Node<T>* _currentThis = this->_header;
   Node<T>* _currentCompare = toCompare._header;
