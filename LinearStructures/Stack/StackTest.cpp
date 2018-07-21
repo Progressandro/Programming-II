@@ -10,14 +10,21 @@ int main() {
   a.push(6);
   a.print();
   copycheck(a);
+  cout << "After copy: " << endl;
+  a.print();
+  a.reverse();
+  cout << "After reverse: " << endl;
   a.print();
   a.flush();
-  cout << "After" << endl;
+  cout << "After flush:" << endl;
   a.print();
   return 0;
 }
 
 void copycheck(Stack<int> a) {
-  a.push(5);
+  cout << "Copy: " << endl;
+  a.print();
+  a.push(6);
+  cout << "Modified copy(+6)" << endl;
   a.print();
 }
