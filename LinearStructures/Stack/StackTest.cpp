@@ -15,6 +15,9 @@ int main() {
   a.reverse();
   cout << "After reverse: " << endl;
   a.print();
+  // a = b;
+  // cout << "Should print a 4: " << endl;
+  // a.print();
   a.flush();
   cout << "After flush:" << endl;
   a.print();

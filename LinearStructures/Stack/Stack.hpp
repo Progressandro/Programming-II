@@ -68,6 +68,7 @@ void Stack<T>::copy(const Stack<T>& originalStack) {
     this->reverse();
   }
 }
+
 template <typename T>
 Stack<T>::~Stack() {
   this->flush();
