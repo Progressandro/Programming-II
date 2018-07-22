@@ -4,12 +4,12 @@
 #include <iostream>
 using namespace std;
 
-template <class T>
+template <typename T>
 class Node {
 private:
-  T data = T();
-  Node<T>* _next = NULL;
-  Node<T>* _prev = NULL;
+  T data;
+  Node<T>* _next;
+  Node<T>* _prev;
 
 public:                                     //Inline declarations
   //Constructors
@@ -17,16 +17,14 @@ public:                                     //Inline declarations
   Node(const Node<T>& originalNode);
   Node(T element);
   Node(T element, Node* _newNext);
-  //Destructor
-  virtual ~Node();
   //Getters
   T getData() const                         {return this-> data;}
-  Node* getNext() const                     {return this->_next;}
-  Node* getPrev() const                     {return this->_prev;}
+  Node<T>* getNext() const                     {return this->_next;}
+  Node<T>* getPrev() const                     {return this->_prev;}
   //Setters
   void setData(T input)                     {this->data = input;}
-  void setNext(Node* _newNext)              {this->_next = _newNext;}
-  void setPrev(Node* _newPrev)              {this->_prev = _newPrev;}
+  void setNext(Node<T>* _newNext)              {this->_next = _newNext;}
+  void setPrev(Node<T>* _newPrev)              {this->_prev = _newPrev;}
   //Copy
   void copy(const Node<T>& originalNode);
   //Assignment
@@ -36,41 +34,42 @@ public:                                     //Inline declarations
 
 //Constructors
 
-template <class T>
+template <typename T>
 Node<T>::Node() {
-
+  this->data = 0;
+  this->_next = NULL;
+  this->_prev = NULL;
 }
 
-template <class T>
+template <typename T>
 Node<T>::Node(T element) {
+  Node();
   this->data = element;
 }
 
-template <class T>
+template <typename T>
 Node<T>::Node(T element, Node* _newNext) {
+  Node();
   this->data = element;
   this->_next = _newNext;
 }
 
-template <class T>
+template <typename T>
 Node<T>::Node(const Node<T>& originalNode) {
+  Node();
   this->copyNode(originalNode);
 }
 
-//Destructor
-template <class T>
-Node<T>::~Node(){
 
-}
 
-template <class T>
+template <typename T>
 void Node<T>::copy(const Node<T>& originalNode) {
   this->data = originalNode.data;
   this->_next = originalNode._next;
   this->_prev = originalNode._prev;
 }
 
-template <class T>
+template <typename T>
 Node<T>& Node<T>::operator=(const Node<T>& originalNode) {
   this->copy(originalNode);
 }
