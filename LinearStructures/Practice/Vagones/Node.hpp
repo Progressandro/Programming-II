@@ -7,9 +7,9 @@ using namespace std;
 template <typename T>
 class Node {
 private:
-  T data = 0;
-  Node<T>* _next = NULL;
-  Node<T>* _prev = NULL;
+  T data;
+  Node<T>* _next;
+  Node<T>* _prev;
 
 public:                                     //Inline declarations
   //Constructors
@@ -36,22 +36,27 @@ public:                                     //Inline declarations
 
 template <typename T>
 Node<T>::Node() {
-
+  this->data = 0;
+  this->_next = NULL;
+  this->_prev = NULL;
 }
 
 template <typename T>
 Node<T>::Node(T element) {
+  Node();
   this->data = element;
 }
 
 template <typename T>
 Node<T>::Node(T element, Node* _newNext) {
+  Node();
   this->data = element;
   this->_next = _newNext;
 }
 
 template <typename T>
 Node<T>::Node(const Node<T>& originalNode) {
+  Node();
   this->copyNode(originalNode);
 }
 

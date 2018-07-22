@@ -5,8 +5,8 @@ using namespace std;
 template <typename T>
 class Stack {
 private:
-  Node<T>* _top = NULL;
-  int len = 0;
+  Node<T>* _top;
+  int len;
 public:
   //Cosntructors
   Stack();
@@ -36,11 +36,13 @@ public:
 
 template <typename T>
 Stack<T>::Stack() {
-  
+  this->_top = NULL;
+  this->len = 0;
 }
 
 template <typename T>
 Stack<T>::Stack(T element) {
+  Stack();
   Node<T>* _newTop = new Node<T>;
   _newTop->setData(element);
   this->_top = _newTop;
@@ -49,6 +51,7 @@ Stack<T>::Stack(T element) {
 
 template <typename T>
 Stack<T>::Stack(const Stack<T>& originalStack) {
+  Stack();
   if(!originalStack.empty())
     this->copy(originalStack);
 }

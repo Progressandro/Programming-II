@@ -5,8 +5,8 @@ using namespace std;
 template <typename T>
 class List {
 private:
-  Node<T>* _header = NULL;
-  int len = 0;
+  Node<T>* _header;
+  int len;
 
 
 public:
@@ -38,17 +38,20 @@ public:
 
 template <typename T>
 List<T>::List() {
-
+  this->_header = NULL;
+  this->len = 0;
 }
 
 template <typename T>
 List<T>::List(T element) {
+  List();
   Node<T>* _newHeader = new Node<T>;
   this->_header = _newHeader;
 }
 
 template <typename T>
 List<T>::List(const List& originalList) {
+  List();
   if(this->_header != originalList._header) {
     this->copy(originalList);
   }
