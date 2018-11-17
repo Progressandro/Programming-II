@@ -39,7 +39,7 @@ public:
   void setNext(Vertex* _newNext) {this->_next = _newNext;}
 
   void insertEdge(Vertex* _toInsert, C weight);
-  void deleteEdge(Vertex* _toDelete);
+  void removeEdge(Vertex* _toDelete);
 };
 
 template <class T, typename C>
@@ -96,7 +96,7 @@ void Vertex<T, C>::insertEdge(Vertex* _owner, C weight) {
 }
 
 template <class T, typename C>
-void Vertex<T, C>::deleteEdge(Vertex* _toDelete) {
+void Vertex<T, C>::removeEdge(Vertex* _toDelete) {
   Edge<T, C>* _current = this->_edges;
   Edge<T, C>* _aux = NULL;
 
@@ -108,6 +108,7 @@ void Vertex<T, C>::deleteEdge(Vertex* _toDelete) {
 
     _current->getVertex()->innerDegree--;
     this->outerDegree--;
+    _current = _current->getNext();
   }
 }
 

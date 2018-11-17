@@ -8,11 +8,12 @@
 #include <algorithm>
 #include "Edge.hpp"
 #include "Vertex.hpp"
-
+#include <list>
 using std::ostream;
 using std::cout;
 using std::endl;
 using std::vector;
+using std::list;
 
 template <class T, typename C>
 class Graph {
@@ -39,8 +40,8 @@ public:
   vector<T> predecessors(T) const;
   void compressGraph(const Graph<T,C> &cycle);
   C predecessorsMinimumEdge(T e) const;
-
-
+  Graph<T,C> getCycle() const;
+  vector<T> sources() const;
   //Properties
   bool empty() const {return !(this->_graph);}
   int order() const;
@@ -51,10 +52,17 @@ public:
 
   template<class M, typename N>
   friend std::ostream& operator<<(std::ostream&, const Graph<M,N>&);
+  Graph<T, C>& operator= (const Graph<T, C>& original);
+  void copy(const Graph<T,C>& copy);
 };
 
 template <class T, typename C>
 Graph<T,C>::Graph(const Graph& copy) {
+  this->copy(copy);
+}
+
+template <class T, typename C>
+void Graph<T,C>::copy(const Graph<T,C>& copy) {
   if (copy._graph) {
     Vertex<T,C>* _original;
     Vertex<T,C>* _toCopy;
@@ -78,6 +86,7 @@ Graph<T,C>::Graph(const Graph& copy) {
     }
   }
 }
+
 
 template <class T, typename C>
 Graph<T,C>::~Graph() {
@@ -142,25 +151,26 @@ Vertex<T,C>* Graph<T,C>::getVertex(T element) const {
 
 template <class T, typename C>
 void Graph<T,C>::removeVertex(T vertexData) {
-  Vertex<T,C>* _toDelete = getVertex(vertexData);
-  if (_toDelete) {
-    Vertex<T,C>* _current;
-    for (_current = this->_graph; _current != NULL; _current = _current->getNext()) {
-      _current->deleteEdge(vertexData);
+  Vertex<T,C>* _vertex = this->getVertex(vertexData);
+  if (_vertex) {
+    for (Vertex<T,C>* it = this->_graph; it; it = it->getNext()) {
+      it->removeEdge(_vertex);
     }
 
-    if (_current != this->_graph) {
-      _current = this->_graph;
-      while (_current->getNext() != _toDelete) {
-        _current = _current->getNext();
+    if (_vertex != this->_graph) {
+      Vertex<T,C>* _aux = this->_graph;
+
+      while (_aux->getNext() != _vertex) {
+        _aux = _aux->getNext();
       }
-      _current->setNext(_toDelete->setNext());
+      _aux->setNext(_vertex->getNext());
     }
     else {
       this->_graph = this->_graph->getNext();
     }
-    delete _toDelete;
+    delete _vertex;
   }
+
 }
 
 template <class T, typename C>
@@ -252,6 +262,37 @@ C Graph<T,C>::predecessorsMinimumEdge(T e) const {
 }
 
 template <class T, typename C>
+Graph<T,C> Graph<T,C>::getCycle() const {
+  Graph<T,C> copy(*this);
+  vector<T> sources = copy.sources();
+
+  while(!sources.empty()) {
+    while(!sources.empty()) {
+      T u = *(sources.begin());
+      sources.erase(sources.begin());
+      copy.removeVertex(u);
+    }
+    sources = copy.sources();
+  }
+  cout << copy;
+  return copy;
+}
+
+template<class T, typename C>
+vector<T> Graph<T,C>::sources() const
+{
+    Vertex<T,C>* _current = this->_graph;
+    vector<T> output;
+    while (_current)
+    {
+        if (_current->innerDegree == 0)
+            output.push_back(_current->getData());
+        _current = _current->getNext();
+    }
+    return output;
+}
+
+template <class T, typename C>
 void Graph<T,C>::compressGraph(const Graph<T,C> &cycle) {
 
   vector<T> cyclicVertices = cycle.getVertices();
@@ -267,8 +308,8 @@ void Graph<T,C>::compressGraph(const Graph<T,C> &cycle) {
         weight = this->edgeWeight(pre.front(), cyclicVertices.front());
         _act = this->getVertex(pre.front());
         _aux = this->getVertex(cyclicVertices.front());
-        _act->deleteEdge(_aux);
-        _act->insertEdge(_new, weight - this->predecessorsMinimumEdge(_aux->getData()));//Construir la funcion getCMin()
+        _act->removeEdge(_aux);
+        _act->insertEdge(_new, weight - this->predecessorsMinimumEdge(_aux->getData()));
       }
       pre.erase(pre.begin());
     }
@@ -320,5 +361,10 @@ std::ostream& operator<<(std::ostream& output, const Graph<M,N> &toPrint)
         _current = _current->getNext();
     }
     return output;
+}
+
+template <class T, typename C>
+Graph<T, C>& Graph<T,C>::operator= (const Graph<T, C>& original) {
+
 }
 #endif

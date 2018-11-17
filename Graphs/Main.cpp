@@ -6,7 +6,7 @@ using namespace std;
 void testPrint(Graph<int,int> graph);
 
 int main() {
-  Graph<int, int> graph;
+  Graph<int, int> graph, cycle;
   int vertices, edges, u, v, w;
   cin >> vertices >> edges;
 
@@ -16,6 +16,6 @@ int main() {
     cin >> u >> v >> w;
     graph.insertEdge(u, v, w);
   }
-  cout << graph;
+  graph.getCycle();
   return 0;
 }
